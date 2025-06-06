@@ -148,3 +148,5 @@ DJOSER = {
         'current_user': 'users.serializers.UserSerializer',
     }
 }
+
+AUTH_USER_MODEL = 'users.User'
