@@ -26,6 +26,12 @@ export const useAuthStore = defineStore('auth', {
       localStorage.setItem('access', data.access)
       localStorage.setItem('refresh', data.refresh)
     },
+    logout(){
+      localStorage.removeItem('access')
+      localStorage.removeItem('refresh')
+      this.user = null
+      this.tokens = null
+    },
     async fetchUser() {
       if (!this.tokens) return;
 

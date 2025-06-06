@@ -8,7 +8,6 @@ import { ref, onMounted } from 'vue'
 import axios from '../lib/axios'
 import { useRouter } from 'vue-router'
 import { useAuthStore} from '../store/auth'
-
 interface User {
     id: Number
     email: string
