@@ -139,6 +139,8 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.0.1:8000" # Django dev server
 ]
 
+CORS_ALLOW_CREDENTIALS = True
+
 DJOSER = {
     'USER_ID_FIELD': 'email',
     'LOGIN_FIELD': 'email',
@@ -147,6 +149,12 @@ DJOSER = {
         'user': 'users.serializers.UserSerializer',
         'current_user': 'users.serializers.UserSerializer',
     }
+}
+
+from datetime import timedelta
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
 }
 
 AUTH_USER_MODEL = 'users.User'
