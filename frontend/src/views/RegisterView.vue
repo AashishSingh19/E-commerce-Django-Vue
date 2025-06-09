@@ -11,10 +11,34 @@
         <input type="email" name="email" placeholder="Email" v-model="email">
         <p v-if="fieldErrors.email" class="error-message">{{ fieldErrors.email }}</p>
 
-        <input type="password" name="password" placeholder="Password" v-model="password">
+        <div class="password-field">
+            <input
+                :type="showPassword ? 'text' : 'password'"
+                name="password"
+                placeholder="Password"
+                v-model="password"
+            />
+            <font-awesome-icon
+                :icon="showPassword ? 'fa-eye-slash' : 'fa-eye'"
+                class="toggle-icon"
+                @click="showPassword = !showPassword"
+            />
+         </div>
         <p v-if="fieldErrors.password" class="error-message">{{ fieldErrors.password }}</p>
 
-        <input type="password" name="confirm_password" placeholder="Confirm Password" v-model="confirm_password">
+        <div class="password-field">
+        <input
+            :type="showConfirmPassword ? 'text' : 'password'"
+            name="confirm_password"
+            placeholder="Confirm Password"
+            v-model="confirm_password"
+        />
+        <font-awesome-icon
+            :icon="showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'"
+            class="toggle-icon"
+            @click="showConfirmPassword = !showConfirmPassword"
+        />
+        </div>
         <p v-if="fieldErrors.confirm_password" class="error-message">{{ fieldErrors.confirm_password }}</p>
 
         <button type="submit">Register</button>
@@ -32,8 +56,15 @@ const first_name = ref('')
 const last_name = ref('')
 const email = ref('')
 const password = ref('')
+const showPassword = ref(false)
+const showConfirmPassword = ref(false)
 const confirm_password = ref('')
-
+const togglePassword = () => {
+    showPassword.value = !showPassword.value
+}
+const toggleConfirmPassword = () => {
+  showConfirmPassword.value = !showConfirmPassword.value
+}
 const error = ref('')
 const success = ref(false)
 const fieldErrors = ref<Record<string, string>>({})
@@ -160,5 +191,33 @@ const handleRegister = async() => {
   color: #16a34a;
   font-size: 0.95rem;
   margin-top: 1rem;
+}
+
+.password-field {
+  position: relative;
+  width: 100%;
+}
+
+.password-field input {
+  width: 100%;
+  padding: 0.5rem 2.5rem 0.5rem 0.75rem;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+.toggle-icon {
+  position: absolute;
+  right: 0.75rem;
+  top: 35%;
+  transform: translateY(-50%);
+  cursor: pointer;
+  color: #666;
+  font-size: 1.1rem;
+}
+
+.error-message {
+  color: red;
+  font-size: 0.9rem;
+  margin-top: 0.25rem;
 }
 </style>

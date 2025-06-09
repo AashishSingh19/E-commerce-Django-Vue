@@ -1,27 +1,25 @@
 <template>
-
+  <div id="app">
+    <Navbar v-if="!$route.meta.hideNavbar" />
+  </div>
   <router-view/>
 </template>
 
+
+<script lang="ts" setup>
+import { computed } from 'vue'
+import { useRoute } from 'vue-router'
+import Navbar from './components/Navbar.vue'
+
+const route = useRoute()
+
+const showNavbar = computed(() => {
+  return !['login', 'register'].includes(route.name as string)
+})
+</script>
+
 <style>
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-
-nav {
-  padding: 30px;
-}
-
-nav a {
-  font-weight: bold;
-  color: #2c3e50;
-}
-
-nav a.router-link-exact-active {
-  color: #42b983;
+  font-family: 'Segoe UI', sans-serif;
 }
 </style>

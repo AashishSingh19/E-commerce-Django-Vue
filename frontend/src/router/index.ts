@@ -6,8 +6,20 @@ import DashboardView from '@/views/DashboardView.vue'
 
 const routes: Array<RouteRecordRaw> = [
   { path: '/', component: HomeView},
-  { path: '/login', component: LoginView},
-  { path: '/register', component: RegisterView},
+  { 
+    path: '/login', 
+    component: LoginView,
+    meta: {
+      hideNavbar: true,
+    }
+  },
+  { 
+    path: '/register', 
+    component: RegisterView,
+    meta: {
+      hideNavbar: true,
+    }
+  },
   { path: '/dashboard', component: DashboardView},
 ]
 
