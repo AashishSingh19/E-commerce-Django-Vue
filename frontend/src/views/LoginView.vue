@@ -66,7 +66,7 @@ const handleLogin = async () =>{
     try{
         await auth.login(email.value, password.value)
         await auth.fetchUser()
-        router.push('/dashboard')
+        router.push('/')
     }catch(err: any){
         error.value = 'Login Failed. Please check your credentials.'
     }

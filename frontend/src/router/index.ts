@@ -20,7 +20,6 @@ const routes: Array<RouteRecordRaw> = [
       hideNavbar: true,
     }
   },
-  { path: '/dashboard', component: DashboardView},
 ]
 
 const router = createRouter({
