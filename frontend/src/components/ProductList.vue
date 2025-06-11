@@ -76,7 +76,7 @@ onMounted(async () => {
 .card img {
   width: 100%;
   height: 140px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 0.25rem;
   margin-bottom: 0.5rem;
 }

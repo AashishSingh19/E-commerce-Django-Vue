@@ -7,9 +7,9 @@
         <li><router-link to="/">Home</router-link></li>
         <li><router-link to="/products">Products</router-link></li>
         <li><router-link to="/cart">Cart</router-link></li>
-        <li><router-link to="/login">Login</router-link></li>
       </ul>
 
+      <!-- Search form moved before login -->
       <form class="search-form" @submit.prevent="handleSearch" role="search" aria-label="Site Search">
         <input
           v-model="searchQuery"
@@ -19,13 +19,38 @@
         />
         <button type="submit" class="search-button">Search</button>
       </form>
+
+      <!-- Login/User Dropdown -->
+      <div class="user-dropdown" @click="toggleDropdown">
+        <span class="user-name">
+          <img src="../assets/default-user.png" alt="User" class="user-avatar">
+          <span class="user-label">
+            <template v-if="auth.user">{{ auth.user.first_name }}</template>
+            <template v-else><router-link to="/login">Login</router-link></template>
+          </span>
+        </span>
+
+        <div v-if="dropdownOpen && auth.user" class="dropdown-menu">
+          <ul><a href="#">User Settings</a></ul>
+          <ul><a href="#">Help & Support</a></ul>
+          <ul><a href="#">Display & Accessibility</a></ul>
+          <button @click="handleLogout">Logout</button>
+        </div>
+      </div>
     </div>
   </nav>
 </template>
 
-<script lang="ts" setup>
-import { ref } from 'vue'
 
+<script lang="ts" setup>
+import router from '@/router'
+import { ref } from 'vue'
+import { useAuthStore } from '@/store/auth'
+import { useRouter } from 'vue-router'
+
+const dropdownOpen = ref(false)
+const auth = useAuthStore()
+const route = useRouter()
 const searchQuery = ref('')
 
 const handleSearch = () => {
@@ -33,6 +58,16 @@ const handleSearch = () => {
     console.log('Search for:', searchQuery.value)
     searchQuery.value = ''
   }
+}
+
+const toggleDropdown = () => {
+  dropdownOpen.value = !dropdownOpen.value
+}
+
+const handleLogout = async() =>{
+  await auth.logout()
+  dropdownOpen.value = false
+  router.push('/')
 }
 </script>
 
@@ -108,6 +143,90 @@ const handleSearch = () => {
 .search-button:hover {
   background-color: #4338ca;
 }
+
+.user-dropdown {
+  position: relative;
+  display: inline-block;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  user-select: none;
+}
+
+.user-name {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  background-color: #f9f9f9;
+  border-radius: 9999px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #333;
+  transition: background-color 0.3s ease;
+}
+
+.user-avatar {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-label {
+  display: inline-block;
+  padding-top: 4px; /* Moves text slightly lower */
+  line-height: 1.2;
+}
+
+.user-label a {
+  text-decoration: none;
+  color: inherit;
+}
+
+.user-name:hover {
+  background-color: #e5e7eb;
+}
+
+.dropdown-menu {
+  position: absolute;
+  right: 0;
+  top: 110%;
+  background-color: #fff;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.5rem;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  z-index: 1000;
+  padding: 0.5rem 0;
+}
+
+.dropdown-menu ul,
+.dropdown-menu button {
+  display: block;
+  width: 100%;
+  padding: 0.6rem 1rem;
+  background: none;
+  border: none;
+  text-align: left;
+  font-size: 0.9rem;
+  color: #333;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  text-decoration: none;
+}
+
+.dropdown-menu ul:hover,
+.dropdown-menu button:hover {
+  background-color: #f3f4f6;
+}
+
+.dropdown-menu a {
+  color: inherit;
+  text-decoration: none;
+  display: block;
+  width: 100%;
+}
+
 
 @media (max-width: 768px) {
   .container {

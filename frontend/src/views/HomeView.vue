@@ -1,6 +1,6 @@
 <template>
-  <!-- <h1>Welcome {{ user?.first_name }}</h1>
-  <button type="submit" @click="handleLogout">Logout</button> -->
+  <!-- <h1>Welcome {{ user?.first_name }}</h1> -->
+  <!-- <button type="submit" @click="handleLogout">Logout</button> -->
 
   <div class="home-view">
     <ProductList />
