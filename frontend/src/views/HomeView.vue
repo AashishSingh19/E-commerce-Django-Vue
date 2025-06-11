@@ -1,6 +1,10 @@
 <template>
-  <h1>Welcome {{ user?.first_name }}</h1>
-  <button type="submit" @click="handleLogout">Logout</button>
+  <!-- <h1>Welcome {{ user?.first_name }}</h1>
+  <button type="submit" @click="handleLogout">Logout</button> -->
+
+  <div class="home-view">
+    <ProductList />
+  </div>
 </template>
 
 <script lang="ts" setup>
@@ -8,6 +12,7 @@ import { ref, onMounted } from 'vue'
 import axios from '../lib/axios'
 import { useRouter } from 'vue-router'
 import { useAuthStore} from '../store/auth'
+import ProductList from '../components/ProductList.vue'
 interface User {
     id: Number
     email: string
@@ -27,10 +32,10 @@ onMounted(async() => {
     }
 })
 
-const handleLogout =() => {
-    auth.logout()
-    router.push('/login')
-}
+// const handleLogout =() => {
+//     auth.logout()
+//     router.push('/login')
+// }
 
 </script>
 
