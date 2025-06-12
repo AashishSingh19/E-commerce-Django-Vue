@@ -10,6 +10,7 @@
         <h2>{{ product.name }}</h2>
         <p class="category">{{ product.category.name }}</p>
         <p class="price">Rs. {{ product.price }}</p>
+        <button @click="addToCart(product.id)">Add to Cart</button>
       </div>
     </div>
   </section>
@@ -19,7 +20,9 @@
 import { ref, onMounted } from 'vue'
 import type { Product } from '../types/Product'
 import { fetchProducts } from '../services/productService'
+import { useCartStore } from '@/store/cart'
 
+const cart = useCartStore()
 const products = ref<Product[]>([])
 const loading = ref(true)
 
@@ -27,6 +30,10 @@ onMounted(async () => {
   products.value = await fetchProducts()
   loading.value = false
 })
+
+function addToCart(productId: number){
+  cart.addItem(productId)
+}
 </script>
 
 <style scoped>
