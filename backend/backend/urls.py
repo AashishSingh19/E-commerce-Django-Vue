@@ -9,6 +9,7 @@ urlpatterns = [
     path('api/auth/', include('djoser.urls')),
     path('api/auth/', include('djoser.urls.jwt')),
     path('api/products/', include('products.urls')),
+    path('api/cart/', include('cart.urls')),
     
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),  
     # Optional UI:
