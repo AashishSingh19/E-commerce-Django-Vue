@@ -25,6 +25,10 @@ export const useAuthStore = defineStore('auth', {
 
       localStorage.setItem('access', data.access)
       localStorage.setItem('refresh', data.refresh)
+
+      api.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
+
+      await this.fetchUser();
     },
     logout(){
       localStorage.removeItem('access')
@@ -47,6 +51,9 @@ export const useAuthStore = defineStore('auth', {
       const refresh = localStorage.getItem('refresh')
       if(access && refresh){
         this.tokens = { access, refresh}
+
+        // Set default Authorization header globally
+        api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
       }
     }
   },

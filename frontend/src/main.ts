@@ -18,6 +18,11 @@ app.use(router)
 
 import { useAuthStore } from './store/auth'
 const auth = useAuthStore()
-auth.fetchUser()
+auth.init()
+
+if(auth.tokens?.access){
+    auth.fetchUser()
+}
+
 
 app.mount('#app')
