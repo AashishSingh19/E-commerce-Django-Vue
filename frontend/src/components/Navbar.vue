@@ -3,11 +3,10 @@
     <div class="container">
       <div class="logo">MyShop</div>
 
-      <ul class="nav-links">
+      <!-- <ul class="nav-links">
         <li><router-link to="/">Home</router-link></li>
-        <li><router-link to="/products">Products</router-link></li>
-        <li><router-link to="/cart">Cart</router-link></li>
-      </ul>
+        <li><router-link to="/cart"><font-awesome-icon :icon="faShoppingCart" /></router-link></li>
+      </ul> -->
 
       <!-- Search form moved before login -->
       <form class="search-form" @submit.prevent="handleSearch" role="search" aria-label="Site Search">
@@ -20,23 +19,37 @@
         <button type="submit" class="search-button">Search</button>
       </form>
 
-      <!-- Login/User Dropdown -->
-      <div class="user-dropdown" @click="toggleDropdown">
-        <span class="user-name">
-          <img src="../assets/default-user.png" alt="User" class="user-avatar">
-          <span class="user-label">
-            <template v-if="auth.user">{{ auth.user.first_name }}</template>
-            <template v-else><router-link to="/login">Login</router-link></template>
-          </span>
-        </span>
-
-        <div v-if="dropdownOpen && auth.user" class="dropdown-menu">
-          <ul><a href="#">User Settings</a></ul>
-          <ul><a href="#">Help & Support</a></ul>
-          <ul><a href="#">Display & Accessibility</a></ul>
-          <button @click="handleLogout">Logout</button>
-        </div>
+      <div class="cart">
+        <font-awesome-icon :icon="faShoppingCart" />
+        <span class="cart-badge">3</span>
       </div>
+
+      <!-- Login/User Dropdown -->
+      <div class="user-dropdown">
+        <template v-if="auth.user">
+          <span class="user-name" @click="toggleDropdown">
+            <img src="../assets/default-user.png" alt="User" class="user-avatar">
+            <span class="user-label">{{ auth.user.first_name }}</span>
+          </span>
+
+          <div v-if="dropdownOpen" class="dropdown-menu">
+            <ul>
+                <li><a href="#">User Settings</a></li>
+                <li><a href="#">Help & Support</a></li>
+                <li><a href="#">Display & Accessibility</a></li>
+                <li><button @click="handleLogout">Logout</button></li>
+              </ul>
+          </div>
+        </template>
+
+        <template v-else>
+          <router-link to="/login" class="user-name">
+            <img src="../assets/default-user.png" alt="User" class="user-avatar">
+            <span class="user-label">Login</span>
+          </router-link>
+        </template>
+      </div>
+
     </div>
   </nav>
 </template>
@@ -47,6 +60,7 @@ import router from '@/router'
 import { ref } from 'vue'
 import { useAuthStore } from '@/store/auth'
 import { useRouter } from 'vue-router'
+import { faBasketShopping, faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 
 const dropdownOpen = ref(false)
 const auth = useAuthStore()
@@ -187,6 +201,39 @@ const handleLogout = async() =>{
   background-color: #e5e7eb;
 }
 
+ .cart {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem;
+  border-radius: 0.5rem;
+  background-color: #f9f9f9;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.2s ease;
+  font-size: 1.2rem;
+  color: #333; 
+ }
+
+.cart:hover {
+  background-color: #e5e7eb;
+  transform: scale(1.05);
+}
+
+.cart-badge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  background-color: #ef4444;
+  color: white;
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 9999px;
+  font-weight: bold;
+  line-height: 1;
+} 
+
+
 .dropdown-menu {
   position: absolute;
   right: 0;
@@ -200,31 +247,34 @@ const handleLogout = async() =>{
   padding: 0.5rem 0;
 }
 
-.dropdown-menu ul,
+.dropdown-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.dropdown-menu li {
+  width: 100%;
+}
+
+.dropdown-menu a,
 .dropdown-menu button {
   display: block;
   width: 100%;
   padding: 0.6rem 1rem;
-  background: none;
   border: none;
+  background: none;
   text-align: left;
   font-size: 0.9rem;
   color: #333;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
   text-decoration: none;
+  cursor: pointer;
+  box-sizing: border-box;
 }
 
-.dropdown-menu ul:hover,
+.dropdown-menu a:hover,
 .dropdown-menu button:hover {
   background-color: #f3f4f6;
-}
-
-.dropdown-menu a {
-  color: inherit;
-  text-decoration: none;
-  display: block;
-  width: 100%;
 }
 
 
