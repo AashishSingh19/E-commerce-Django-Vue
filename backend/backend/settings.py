@@ -142,7 +142,7 @@ REST_FRAMEWORK = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "http://localhost:8080",  # Vue dev server
+    "http://localhost:3000",  # Vite dev server
     "http://127.0.0.0.1:8000" # Django dev server
 ]
 

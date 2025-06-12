@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import api from '@/lib/axios';
+import api from '../lib/axios';
 
 interface User {
   id: number;

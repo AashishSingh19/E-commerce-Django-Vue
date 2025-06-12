@@ -56,9 +56,9 @@
 
 
 <script lang="ts" setup>
-import router from '@/router'
+import router from '../router'
 import { ref } from 'vue'
-import { useAuthStore } from '@/store/auth'
+import { useAuthStore } from '../store/auth'
 import { useRouter } from 'vue-router'
 import { faBasketShopping, faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 
