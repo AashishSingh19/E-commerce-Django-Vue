@@ -31,7 +31,9 @@
 import { onMounted, ref } from 'vue';
 import { fetchCart, removeCartItem } from '@/services/cartService';
 import type { CartItem } from '@/types/Cart';
+import { useCartStore } from '@/store/cart';
 
+const cartStore = useCartStore()
 const cartItems = ref<CartItem[]>([])
 const loading = ref(true)
 
@@ -46,7 +48,7 @@ const loadCart = async() => {
 }
 
 const removeItem = async(id: number) =>{
-    await removeCartItem(id)
+    await cartStore.removeItem(id)
     cartItems.value = cartItems.value.filter(item => item.id !== id)
 }
 

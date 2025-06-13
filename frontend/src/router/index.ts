@@ -7,6 +7,7 @@ import DashboardView from '@/views/DashboardView.vue'
 const routes: Array<RouteRecordRaw> = [
   { 
     path: '/',
+    name: 'Home',
     component: HomeView
   },
   {

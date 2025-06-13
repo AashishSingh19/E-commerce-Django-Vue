@@ -28,6 +28,15 @@ export const useCartStore = defineStore('cart', {
         async removeItem(id: number){
             await removeCartItem(id)
             this.items = this.items.filter(item => item.id !== id)
+        },
+        async init() {
+            const token = localStorage.getItem('access')
+            if (token) {
+                await this.loadCart()
+            }
+        },
+        reset() {
+            this.items = []
         }
     }
 })

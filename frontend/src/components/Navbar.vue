@@ -1,7 +1,7 @@
 <template>
   <nav class="navbar">
     <div class="container">
-      <div class="logo">MyShop</div>
+      <div class="logo" @click="toHomePage">MyShop</div>
 
       <!-- <ul class="nav-links">
         <li><router-link to="/">Home</router-link></li>
@@ -99,6 +99,10 @@ const handleLogout = async() =>{
 const goToCart =  async() =>{
   route.push({ name: 'Cart' })
 }
+
+const toHomePage =  async() =>{
+  route.push({ name: 'Home' })
+}
 </script>
 
 <style scoped>
@@ -122,6 +126,7 @@ const goToCart =  async() =>{
   font-size: 1.75rem;
   font-weight: bold;
   color: #4f46e5;
+  cursor: pointer;
 }
 
 .nav-links {

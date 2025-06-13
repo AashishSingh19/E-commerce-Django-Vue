@@ -11,8 +11,10 @@ import { onMounted, computed } from 'vue'
 import { useRoute } from 'vue-router'
 import Navbar from './components/Navbar.vue'
 import { useCartStore } from './store/cart'
+import { useAuthStore } from './store/auth'
 
-
+const authStore = useAuthStore()
+const cartStore = useCartStore()
 const route = useRoute()
 
 const showNavbar = computed(() => {
@@ -22,6 +24,11 @@ const showNavbar = computed(() => {
 onMounted(()=> {
   const cartStore = useCartStore()
   cartStore.loadCart()
+})
+
+onMounted(async() => {
+  authStore.init()
+  await cartStore.init()
 })
 </script>
 

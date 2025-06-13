@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import api from '../lib/axios';
+import { useCartStore } from './cart';
 
 interface User {
   id: number;
@@ -26,15 +27,21 @@ export const useAuthStore = defineStore('auth', {
       localStorage.setItem('access', data.access)
       localStorage.setItem('refresh', data.refresh)
 
-      api.defaults.headers.common['Authorization'] = `Bearer ${data.access}`;
+      api.defaults.headers.common['Authorization'] = `Bearer ${data.access}`
 
-      await this.fetchUser();
+      await this.fetchUser()
+
+      const cartStore = useCartStore()
+      await cartStore.loadCart()
     },
     logout(){
       localStorage.removeItem('access')
       localStorage.removeItem('refresh')
       this.user = null
       this.tokens = null
+
+      const cartStore: ReturnType<typeof useCartStore> = useCartStore()
+      cartStore.reset()
     },
     async fetchUser() {
       if (!this.tokens) return;
