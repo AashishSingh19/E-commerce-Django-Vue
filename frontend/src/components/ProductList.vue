@@ -6,7 +6,7 @@
 
     <div v-else class="grid">
       <div v-for="product in products" :key="product.id" class="card">
-        <img :src="product.image ?? './default-image.png'" alt="Product Image" />
+        <img :src="(getImageSrc(product.image) as string)" alt="Product image" />
         <h2>{{ product.name }}</h2>
         <p class="category">{{ product.category.name }}</p>
         <p class="price">Rs. {{ product.price }}</p>
@@ -34,6 +34,11 @@ onMounted(async () => {
 function addToCart(productId: number){
   cart.addItem(productId)
 }
+
+const getImageSrc = (image: string | null): string => {
+  return image ?? new URL('@/assets/default-image.png', import.meta.url).href
+}
+
 </script>
 
 <style scoped>

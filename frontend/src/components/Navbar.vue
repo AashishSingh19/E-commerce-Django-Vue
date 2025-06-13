@@ -19,9 +19,9 @@
         <button type="submit" class="search-button">Search</button>
       </form>
 
-      <div class="cart">
+      <div class="cart" @click="goToCart">
         <font-awesome-icon :icon="faShoppingCart" />
-        <span class="cart-badge">3</span>
+        <span v-if="cartStore" class="cart-badge">{{ cartStore.totalCount }}</span>
       </div>
 
       <!-- Login/User Dropdown -->
@@ -57,15 +57,27 @@
 
 <script lang="ts" setup>
 import router from '../router'
-import { ref } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useAuthStore } from '../store/auth'
 import { useRouter } from 'vue-router'
 import { faBasketShopping, faShoppingCart } from '@fortawesome/free-solid-svg-icons'
+import { fetchCart } from '@/services/cartService'
+import { useCartStore } from '@/store/cart'
 
+const cartStore = useCartStore()
+const cartCount = ref(0)
 const dropdownOpen = ref(false)
 const auth = useAuthStore()
 const route = useRouter()
 const searchQuery = ref('')
+
+
+
+onMounted(async () => {
+  const cartItems = await fetchCart()
+  cartCount.value = cartItems.reduce((sum, item)=> sum + item.quantity, 0)
+})
+
 
 const handleSearch = () => {
   if (searchQuery.value.trim()) {
@@ -82,6 +94,10 @@ const handleLogout = async() =>{
   await auth.logout()
   dropdownOpen.value = false
   router.push('/')
+}
+
+const goToCart =  async() =>{
+  route.push({ name: 'Cart' })
 }
 </script>
 

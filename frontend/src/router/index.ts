@@ -5,7 +5,15 @@ import RegisterView from '@/views/RegisterView.vue'
 import DashboardView from '@/views/DashboardView.vue'
 
 const routes: Array<RouteRecordRaw> = [
-  { path: '/', component: HomeView},
+  { 
+    path: '/',
+    component: HomeView
+  },
+  {
+    path: '/cart',
+    name: 'Cart',
+    component: ()=> import('@/views/CartView.vue'),
+  },
   { 
     path: '/login', 
     component: LoginView,
@@ -19,7 +27,7 @@ const routes: Array<RouteRecordRaw> = [
     meta: {
       hideNavbar: true,
     }
-  },
+  }
 ]
 
 const router = createRouter({
