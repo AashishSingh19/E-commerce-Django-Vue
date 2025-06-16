@@ -19,6 +19,7 @@
                             Quantity: {{ item.quantity }}
                         </p>
                         <p>Price: {{ item.product.price * item.quantity }}</p>
+                        <button @click="checkout()">Checkout</button>
                     </div>
                 </div>
                 <button @click="removeItem(item.id)" class="remove-button">Remove</button>
@@ -32,7 +33,10 @@ import { onMounted, ref } from 'vue';
 import { fetchCart, removeCartItem } from '@/services/cartService';
 import type { CartItem } from '@/types/Cart';
 import { useCartStore } from '@/store/cart';
+import { useRouter } from 'vue-router';
 
+
+const router = useRouter()
 const cartStore = useCartStore()
 const cartItems = ref<CartItem[]>([])
 const loading = ref(true)
@@ -45,6 +49,10 @@ const loadCart = async() => {
     }finally{
         loading.value = false
     }
+}
+
+const checkout = async() => {
+  router.push('/checkout')
 }
 
 const removeItem = async(id: number) =>{
