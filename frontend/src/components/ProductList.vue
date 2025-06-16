@@ -21,10 +21,17 @@ import { ref, onMounted } from 'vue'
 import type { Product } from '../types/Product'
 import { fetchProducts } from '../services/productService'
 import { useCartStore } from '@/store/cart'
+import { useAuthStore } from '@/store/auth'
+import { useRouter } from 'vue-router'
+import { useToast } from 'vue-toastification'
 
+const router = useRouter()
+const authStore = useAuthStore()
 const cart = useCartStore()
 const products = ref<Product[]>([])
 const loading = ref(true)
+const toast = useToast()
+
 
 onMounted(async () => {
   products.value = await fetchProducts()
@@ -32,6 +39,11 @@ onMounted(async () => {
 })
 
 function addToCart(productId: number){
+  if(!authStore.user){
+    toast.warning('Please login to add items to cart.')
+    router.push('/login')
+    return 
+  }
   cart.addItem(productId)
 }
 
