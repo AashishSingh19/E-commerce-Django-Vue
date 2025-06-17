@@ -19,6 +19,9 @@ export const useAuthStore = defineStore('auth', {
     user: null as User | null,
     tokens: null as Tokens | null,
   }),
+    getters: {
+    isAuthenticated: (state) => !!state.tokens?.access,
+  },
   actions: {
     async login(email: string, password: string) {
       const { data } = await api.post('auth/jwt/create/', { email, password });
@@ -53,14 +56,25 @@ export const useAuthStore = defineStore('auth', {
       });
       this.user = data;
     },
-    init(){
-      const access = localStorage.getItem('access')
-      const refresh = localStorage.getItem('refresh')
-      if(access && refresh){
-        this.tokens = { access, refresh}
+    async init() {
+      const token = localStorage.getItem('access')
 
-        // Set default Authorization header globally
-        api.defaults.headers.common['Authorization'] = `Bearer ${access}`;
+      if (token) {
+        this.tokens = {
+          access: token,
+          refresh: localStorage.getItem('refresh') || ''
+        }
+
+        try {
+          const res = await api.get('/auth/users/me/')
+          this.user = res.data
+        } catch (err) {
+          console.warn('[Auth] Token invalid or expired')
+          this.tokens = null
+          this.user = null
+          localStorage.removeItem('access')
+          localStorage.removeItem('refresh')
+        }
       }
     }
   },

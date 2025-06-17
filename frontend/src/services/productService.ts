@@ -8,6 +8,6 @@ export async function fetchProducts(): Promise<Product[]> {
 }
 
 export async function fetchProduct(slug: string): Promise<Product>{
-    const response = await apiClient.get('/products/${slug}/')
+    const response = await apiClient.get(`/products/${slug}/`)
     return response.data
 }

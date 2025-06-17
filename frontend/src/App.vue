@@ -21,14 +21,12 @@ const showNavbar = computed(() => {
   return !['login', 'register'].includes(route.name as string)
 })
 
-onMounted(()=> {
-  const cartStore = useCartStore()
-  cartStore.loadCart()
-})
+onMounted(async () => {
+  await authStore.init()
 
-onMounted(async() => {
-  authStore.init()
-  await cartStore.init()
+  if (authStore.isAuthenticated) {
+    await cartStore.init()
+  }
 })
 </script>
 
