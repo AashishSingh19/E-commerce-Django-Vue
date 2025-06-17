@@ -40,7 +40,6 @@ const router = useRouter()
 const cartStore = useCartStore()
 const cartItems = ref<CartItem[]>([])
 const loading = ref(true)
-
 const loadCart = async() => {
     try {
         cartItems.value = await fetchCart()

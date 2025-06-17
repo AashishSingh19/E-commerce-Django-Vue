@@ -1,6 +1,6 @@
 <template>
     <div class="checkout">
-        <h1>Checkout</h1>
+      <h1>Checkout</h1>
             <div class="checkout-container">
                 <div class="billing-details">
                     <h2>Billing Details</h2>
@@ -20,6 +20,32 @@
                         Delivery Address:
                         <input type="text" class="address" v-model="address">
                     </label>
+                </div>
+                <div class="cart-summary">
+                    <h2>Order Summary</h2>
+                    <ul>
+                      <li v-for="item in cartItems" :key="item.id">
+                          <img :src="item.product.image" alt="Product" class="item-image" />
+                          <div class="item-details">
+                              <p>{{ item.product.name }}</p>
+                              <p>Rs. {{ item.product.price }}</p>
+                              <div class="quantity-control">
+                                <button @click="decreaseQuantity(item)" :disabled="item.quantity <= 1">−</button>
+                                <input 
+                                  type="number" 
+                                  min="1" 
+                                  :value="item.quantity"
+                                  @change="updateQuantity(item, $event)" 
+                                />
+                                <button @click="increaseQuantity(item)">+</button>
+                              </div>
+                          </div>
+                      </li>
+                    </ul>
+                    <p class="subtotal">Sub Total: Rs. {{ subtotal }}</p>
+                    <p class="delivery">Delivery: Rs. {{ delivery }}</p>
+                    <p class="total">TOTAL TO PAY: Rs. {{ totalPrice }}</p>
+
                     <label for="payment">
                         Payment:
                         <select id="payment" class="payment" v-model="payment">
@@ -29,17 +55,6 @@
                             <option value="card">Debit/Credit Card</option>
                         </select>
                     </label>
-                </div>
-                <div class="cart-summary">
-                    <h2>Order Summary</h2>
-                    <ul>
-                        <li v-for="item in cartItems" :key="item.id">
-                            <img :src="item.product.image" alt="Product" class="item-image" />
-                            {{ item.product.name }} x {{ item.quantity }} -  Rs. {{ item.product.price }} * {{ item.quantity }}
-                        </li>
-                    </ul>
-                    <p class="total">Total: Rs. {{ totalPrice }}</p>
-
                     <button class="checkout-button">Proceed to Checkout</button>
                 </div>
             </div>
@@ -53,7 +68,7 @@ import { useAuthStore } from '@/store/auth'
 import type { CartItem } from '@/types/Cart';
 import { useCartStore } from '@/store/cart'
 import { fetchCart } from '@/services/cartService'
-
+import { updateCartItem } from '@/services/cartService';
 
 const fullname = ref('')
 const email = ref('')
@@ -65,10 +80,17 @@ const cartStore = useCartStore()
 const cartItems = ref<CartItem[]>([])
 const loading = ref(true)
 
-const totalPrice = computed(() =>
+const delivery = computed(()=>{
+  const deliveryCharge = 50
+  return deliveryCharge
+})
+
+const subtotal = computed(() =>
   cartItems.value.reduce((sum, item) => sum + item.product.price * item.quantity, 0)
 )
 
+
+const totalPrice = computed(() => subtotal.value + delivery.value)
 
 const loadCart = async() => {
     try {
@@ -92,6 +114,33 @@ onMounted(async() =>{
         console.error('Failed to load user info:', error)
     }
 })
+
+function increaseQuantity(item: CartItem){
+  item.quantity += 1
+}
+
+function decreaseQuantity(item: CartItem){
+    if (item.quantity > 1) {
+    item.quantity -= 1;
+  }
+}
+
+async function updateQuantity(item: CartItem, event: Event) {
+  const newQuantity = parseInt((event.target as HTMLInputElement).value, 10)
+  if (newQuantity >= 1) {
+    item.quantity = newQuantity
+    syncQuantityWithBackend(item)
+  }
+}
+
+async function syncQuantityWithBackend(item: CartItem) {
+  try {
+    await updateCartItem(item.id, item.quantity)
+    console.log(`Updated item ${item.id} to quantity ${item.quantity}`)
+  } catch (error) {
+    console.error('Failed to update quantity to backend:', error)
+  }
+}
 </script>
 
 <style scoped>
@@ -111,15 +160,16 @@ body {
 }
 
 .checkout h1 {
-  text-align: center;
-  font-size: 2.5rem;
+  text-align: left;
+  font-size: 2rem;
   font-weight: 600;
   margin-top: 0; 
-  margin-bottom: 1.5rem; 
+  margin-bottom: 0.5rem; 
   color: #1a1a1a;
   border-bottom: 2px solid #e0e0e0;
   padding-bottom: 0.5rem;
   letter-spacing: 1px;
+  font-family: ;
 }
 
 .checkout-container {
@@ -154,7 +204,7 @@ body {
   flex: 1 1 48%;
   max-width: 48%;
   background-color: #ffffff;
-  padding: 2rem;
+  padding: 1rem;
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   transition: all 0.3s ease-in-out;
@@ -164,14 +214,15 @@ body {
 .cart-summary h2 {
   text-align: center;
   margin-bottom: 1.5rem;
-  font-size: 1.75rem;
+  font-size: 1.5rem;
   font-weight: 600;
   color: #333;
   border-bottom: 1px solid #eee;
   padding-bottom: 0.5rem;
 }
 
-.billing-details label {
+.billing-details label,
+.cart-summary label {
   display: block;
   margin-bottom: 1.2rem;
   font-size: 0.95rem;
@@ -180,7 +231,8 @@ body {
 }
 
 .billing-details input,
-.billing-details select {
+.cart-summary input,
+.cart-summary select {
   width: 100%;
   padding: 0.75rem 1rem;
   border: 1px solid #ccc;
@@ -217,19 +269,77 @@ body {
   border-bottom: 1px solid #eaeaea;
   font-size: 1rem;
   color: black;
+  font-weight: 500;
 }
 
 .cart-summary li:last-child {
   border-bottom: none;
 }
 
-.cart-summary .total {
-  font-size: 1.25rem;
-  font-weight: 700;
-  text-align: right;
+.cart-summary .total
+ {
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: left;
   margin-top: 1rem;
   color: #000;
 }
+
+.cart-summary .subtotal,
+    .delivery
+ {
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: left;
+  margin-top: 1rem;
+  color: #777;
+}
+
+.quantity-control {
+  display: flex;
+  align-items: center;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+}
+
+.quantity-control input {
+  width: 50px;
+  height: 36px;
+  text-align: center;
+  font-size: 1rem;
+  padding: 0;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  appearance: textfield;
+}
+
+.quantity-control input::-webkit-inner-spin-button,
+.quantity-control input::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.quantity-control button {
+  width: 36px;
+  height: 36px;
+  background-color: #eee;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1.2rem;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+  transition: background-color 0.2s ease;
+  margin-top: 0.5rem;
+}
+
+.quantity-control button:hover {
+  background-color: #ddd;
+}
+
 
 .item-image {
   width: 60px;
@@ -247,6 +357,9 @@ body {
   transform: scale(1.05);
 }
 
+.item-details {
+  flex-direction: column;
+}
 
 /* Mobile Responsive */
 @media (max-width: 768px) {
