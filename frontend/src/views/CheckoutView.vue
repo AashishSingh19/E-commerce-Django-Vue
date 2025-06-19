@@ -55,7 +55,7 @@
                             <option value="card">Debit/Credit Card</option>
                         </select>
                     </label>
-                    <button class="checkout-button">Proceed to Checkout</button>
+                    <button @click="handleCheckout" class="checkout-button">Proceed to Checkout</button>
                 </div>
             </div>
     </div>
@@ -69,6 +69,7 @@ import type { CartItem } from '@/types/Cart';
 import { useCartStore } from '@/store/cart'
 import { fetchCart } from '@/services/cartService'
 import { updateCartItem } from '@/services/cartService';
+import api from '@/lib/axios';
 
 const fullname = ref('')
 const email = ref('')
@@ -142,6 +143,37 @@ function decreaseQuantity(item: CartItem){
     if (item.quantity > 1) {
     item.quantity -= 1;
     syncQuantityWithBackend(item)
+  }
+}
+
+async function handleCheckout(){
+  if(!phone.value || !address || !payment){
+    alert("Please fill in the details.")
+    return
+  }
+  if(cartItems.value.length === 0){
+    alert("Your cart is empty.")
+    return
+  }
+  const payload = {
+    phone: phone.value,
+    address: address.value,
+    payment_method: payment.value,
+    items: cartItems.value.map(item => ({
+      product_id: item.product.id,
+      quantity: item.quantity,
+    }))
+  }
+  console.log("Payload being sent:", payload);
+
+try{
+  await apiClient.post('/checkout/', payload)
+  alert("Order placed successfully!")
+  cartItems.value = []
+  cartStore.cleanCart()
+  }catch(error: any){
+    console.error("Checkout failed:", error.response?.data || error)
+    alert("Checkout failed.")
   }
 }
 </script>
