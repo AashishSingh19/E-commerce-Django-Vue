@@ -115,16 +115,6 @@ onMounted(async() =>{
     }
 })
 
-function increaseQuantity(item: CartItem){
-  item.quantity += 1
-}
-
-function decreaseQuantity(item: CartItem){
-    if (item.quantity > 1) {
-    item.quantity -= 1;
-  }
-}
-
 async function updateQuantity(item: CartItem, event: Event) {
   const newQuantity = parseInt((event.target as HTMLInputElement).value, 10)
   if (newQuantity >= 1) {
@@ -135,10 +125,23 @@ async function updateQuantity(item: CartItem, event: Event) {
 
 async function syncQuantityWithBackend(item: CartItem) {
   try {
+    console.log("Sending PUT to backend:", item.id, item.quantity)
     await updateCartItem(item.id, item.quantity)
     console.log(`Updated item ${item.id} to quantity ${item.quantity}`)
   } catch (error) {
     console.error('Failed to update quantity to backend:', error)
+  }
+}
+
+function increaseQuantity(item: CartItem){
+  item.quantity += 1
+  syncQuantityWithBackend(item)
+}
+
+function decreaseQuantity(item: CartItem){
+    if (item.quantity > 1) {
+    item.quantity -= 1;
+    syncQuantityWithBackend(item)
   }
 }
 </script>
