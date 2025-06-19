@@ -344,7 +344,7 @@ body {
 .item-image {
   width: 60px;
   height: 60px;
-  object-fit: cover;
+  object-fit: contain;
   border-radius: 8px;
   border: 1px solid #e0e0e0;
   margin-right: 1rem;
