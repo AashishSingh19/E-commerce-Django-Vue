@@ -25,7 +25,7 @@
                     <h2>Order Summary</h2>
                     <ul>
                       <li v-for="item in cartItems" :key="item.id">
-                          <img :src="item.product.image" alt="Product" class="item-image" />
+                          <img :src="item.product.image ?? ''" alt="Product" class="item-image" />
                           <div class="item-details">
                               <p>{{ item.product.name }}</p>
                               <p>Rs. {{ item.product.price }}</p>
@@ -204,7 +204,6 @@ body {
   border-bottom: 2px solid #e0e0e0;
   padding-bottom: 0.5rem;
   letter-spacing: 1px;
-  font-family: ;
 }
 
 .checkout-container {

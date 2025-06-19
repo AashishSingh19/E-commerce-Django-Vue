@@ -12,7 +12,7 @@
         <div v-else class="cart-items">
             <div v-for="item in cartItems" :key="item.id" class="cart-item">
                 <div class="item-info">
-                    <img :src="item.product.image" alt="Product" class="item-image" />
+                    <img :src="item.product.image ?? ''" alt="Product" class="item-image" />
                     <div>
                         <h2>{{  item.product.name }}</h2>
                         <p>

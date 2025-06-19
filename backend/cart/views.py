@@ -1,4 +1,5 @@
-from rest_framework import viewsets, permissions
+from rest_framework import viewsets, status, permissions
+from rest_framework.views import APIView
 from .models import CartItem
 from .serializers import CartItemSerializer
 
@@ -14,5 +15,3 @@ class CartItemViewSet(viewsets.ModelViewSet):
     
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
-
-        
