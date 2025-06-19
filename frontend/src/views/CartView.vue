@@ -19,7 +19,7 @@
                             Quantity: {{ item.quantity }}
                         </p>
                         <p>Price: {{ item.product.price * item.quantity }}</p>
-                        <button @click="checkout()">Checkout</button>
+                        <button @click="checkout()" class="checkout-button">Checkout</button>
                     </div>
                 </div>
                 <button @click="removeItem(item.id)" class="remove-button">Remove</button>
@@ -122,5 +122,14 @@ h1 {
 
 .remove-button:hover {
   background-color: #c0392b;
+}
+
+.checkout-button{
+  background-color: #45a049;
+  color: white;
+  border: none;
+  padding: 8px 14px;
+  border-radius: 4px;
+  cursor: pointer;
 }
 </style>
