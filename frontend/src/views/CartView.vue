@@ -19,7 +19,7 @@
                             Quantity: {{ item.quantity }}
                         </p>
                         <p>Price: {{ item.product.price * item.quantity }}</p>
-                        <button @click="checkout()" class="checkout-button">Checkout</button>
+                        <button @click="goToCheckout()" class="checkout-button">Checkout</button>
                     </div>
                 </div>
                 <button @click="removeItem(item.id)" class="remove-button">Remove</button>
@@ -50,7 +50,7 @@ const loadCart = async() => {
     }
 }
 
-const checkout = async() => {
+const goToCheckout = () => {
   router.push('/checkout')
 }
 
