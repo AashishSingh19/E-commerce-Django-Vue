@@ -5,6 +5,7 @@ from .serializers import CartItemSerializer
 # Create your views here.
 
 class CartItemViewSet(viewsets.ModelViewSet):
+    queryset = CartItem.objects.all()
     serializer_class = CartItemSerializer
     permission_classes = [permissions.IsAuthenticated]
 
