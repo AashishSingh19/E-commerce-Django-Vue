@@ -2,7 +2,6 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import HomeView from '@/views/HomeView.vue'
 import LoginView from '@/views/LoginView.vue'
 import RegisterView from '@/views/RegisterView.vue'
-import CheckoutView from '@/views/CheckoutView.vue'
 
 const routes: Array<RouteRecordRaw> = [
   { 
@@ -29,10 +28,15 @@ const routes: Array<RouteRecordRaw> = [
       hideNavbar: true,
     }
   },
-    {
+  {
     path: '/checkout',
     name: 'Checkout',
     component: ()=> import('@/views/CheckoutView.vue'),
+  },
+  {
+    path: '/user-profile',
+    name: 'Profile',
+    component: ()=> import('@/views/UserProfileView.vue'),
   },
 ]
 
