@@ -34,7 +34,7 @@
 
           <div v-if="dropdownOpen" class="dropdown-menu">
             <ul>
-                <li><a href="#">User Settings</a></li>
+                <li><a @click="goToUser" href="#">User Settings</a></li>
                 <li><a href="#">Help & Support</a></li>
                 <li><a href="#">Display & Accessibility</a></li>
                 <li><button @click="handleLogout">Logout</button></li>
@@ -84,6 +84,10 @@ const handleSearch = () => {
     console.log('Search for:', searchQuery.value)
     searchQuery.value = ''
   }
+}
+
+const goToUser = async() =>{
+  router.push('/user-profile')
 }
 
 const toggleDropdown = () => {
