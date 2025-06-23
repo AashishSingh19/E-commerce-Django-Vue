@@ -17,8 +17,16 @@ export const useCartStore = defineStore('cart', {
             this.loading = false
         },
         async addItem(productId: number, quantity = 1){
-            const item = await addToCart(productId, quantity)
-            this.items.push(item)
+            const newItem = await addToCart(productId, quantity)
+
+            const existingIndex = this.items.findIndex(item => item.product.id === newItem.product.id)
+
+            if (existingIndex !== -1){
+                this.items[existingIndex] = { ...this.items[existingIndex], quantity: newItem.quantity }
+            }else{
+                this.items.push(newItem)
+            }
+            console.log('Cart total count:', this.totalCount)
         },
         async updateItem(id: number, quantity: number){
             const updated = await updateCartItem(id, quantity)
