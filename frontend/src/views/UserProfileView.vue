@@ -1,6 +1,6 @@
 <template>
 <div class="user-profile">
-    <h1 class="account">My Account</h1>
+    <h1>My Account</h1>
     <div class="profile-container">
         <div class="user-details">
             <h3>Account Details</h3>
@@ -53,13 +53,35 @@ const fetchUserInfo = async() => {
         console.error('Failed to load user profile:', error)
     }
 }
+
+const updateProfile = async() =>{
+    try{
+        const token = localStorage.getItem('access')
+        const payload: Record<string, any> = {
+            firstname: firstname.value,
+            lastname: lastname.value,
+            email: email.value,
+        }
+
+        if(password.value){
+            payload['password'] = password.value
+        }
+
+        const response = await apiClient.put('http://127.0.0.1:8000/api/users/profile/', payload, {
+            headers:{
+                Authorization: `Bearer ${token}`
+            }
+        })
+        alert('Profile Update Successfully.')
+        password.value = ''
+    }catch(error) {
+        console.error('Failed to update profile:', error)
+        alert('Failed to update profile.')
+    }
+}
 onMounted(() => {
     fetchUserInfo()
 })
-
-async function updateProfile(){
-
-}
 </script>
 
 <style>
@@ -77,7 +99,6 @@ async function updateProfile(){
   margin-top: 0; 
   margin-bottom: 0.5rem; 
   color: #1a1a1a;
-  padding-bottom: 0.5rem;
   letter-spacing: 1px;
 }
 .profile-container {
@@ -141,4 +162,9 @@ async function updateProfile(){
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
+
+.user-details button:hover {
+  background-color: #45a049;
+}
+
 </style>

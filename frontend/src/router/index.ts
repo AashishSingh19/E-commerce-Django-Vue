@@ -38,6 +38,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Profile',
     component: ()=> import('@/views/UserProfileView.vue'),
   },
+  {
+    path: '/help-and-support',
+    name: 'Help',
+    component: ()=> import('@/views/HelpAndSupportView.vue'),
+  },
 ]
 
 const router = createRouter({
