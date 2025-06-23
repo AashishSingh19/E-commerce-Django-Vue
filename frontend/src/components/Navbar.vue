@@ -35,7 +35,7 @@
           <div v-if="dropdownOpen" class="dropdown-menu">
             <ul>
                 <li><a @click="goToUser" href="#">User Settings</a></li>
-                <li><a href="#">Help & Support</a></li>
+                <li><a @click="goToHelp" href="#">Help & Support</a></li>
                 <li><a href="#">Display & Accessibility</a></li>
                 <li><button @click="handleLogout">Logout</button></li>
               </ul>
@@ -102,6 +102,9 @@ const handleLogout = async() =>{
 
 const goToCart =  async() =>{
   route.push({ name: 'Cart' })
+}
+const goToHelp =  async() =>{
+  route.push({ name: 'Help' })
 }
 
 const toHomePage =  async() =>{
