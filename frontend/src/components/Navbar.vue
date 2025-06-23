@@ -60,7 +60,7 @@ import router from '../router'
 import { ref, onMounted } from 'vue'
 import { useAuthStore } from '../store/auth'
 import { useRouter } from 'vue-router'
-import { faBasketShopping, faShoppingCart } from '@fortawesome/free-solid-svg-icons'
+import { faShoppingCart } from '@fortawesome/free-solid-svg-icons'
 import { fetchCart } from '@/services/cartService'
 import { useCartStore } from '@/store/cart'
 
@@ -71,13 +71,10 @@ const auth = useAuthStore()
 const route = useRouter()
 const searchQuery = ref('')
 
-
-
 onMounted(async () => {
   const cartItems = await fetchCart()
   cartCount.value = cartItems.reduce((sum, item)=> sum + item.quantity, 0)
 })
-
 
 const handleSearch = () => {
   if (searchQuery.value.trim()) {
