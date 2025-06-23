@@ -6,11 +6,13 @@
 
     <div v-else class="grid">
       <div v-for="product in products" :key="product.id" class="card">
-        <img :src="(getImageSrc(product.image) as string)" alt="Product image" />
-        <h2>{{ product.name }}</h2>
+        <router-link :to="`/products/${product.slug}`" class="product-link">
+          <img :src="(getImageSrc(product.image) as string)" alt="Product image" />
+          <h2 class="product-title">{{ product.name }}</h2>
+        </router-link>
         <p class="category">{{ product.category.name }}</p>
         <p class="price">Rs. {{ product.price }}</p>
-        <button @click="addToCart(product.id)">Add to Cart</button>
+        <AddToCartButton :productId="product.id"/>
       </div>
     </div>
   </section>
@@ -20,32 +22,15 @@
 import { ref, onMounted } from 'vue'
 import type { Product } from '../types/Product'
 import { fetchProducts } from '../services/productService'
-import { useCartStore } from '@/store/cart'
-import { useAuthStore } from '@/store/auth'
-import { useRouter } from 'vue-router'
-import { useToast } from 'vue-toastification'
+import AddToCartButton from './AddToCartButton.vue'
 
-const router = useRouter()
-const authStore = useAuthStore()
-const cart = useCartStore()
 const products = ref<Product[]>([])
 const loading = ref(true)
-const toast = useToast()
-
 
 onMounted(async () => {
   products.value = await fetchProducts()
   loading.value = false
 })
-
-function addToCart(productId: number){
-  if(!authStore.user){
-    toast.warning('Please login to add items to cart.')
-    router.push('/login')
-    return 
-  }
-  cart.addItem(productId)
-}
 
 const getImageSrc = (image: string | null): string => {
   return image ?? new URL('@/assets/default-image.png', import.meta.url).href
@@ -72,6 +57,18 @@ const getImageSrc = (image: string | null): string => {
   font-size: 1.5rem;
   font-weight: 700;
   margin-bottom: 1rem;
+}
+
+.product-link{
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.product-title{
+  color: #333;
+  font-weight: 600;
+  font-size: 1.1rem;
 }
 
 .status {
