@@ -1,41 +1,59 @@
 <template>
   <section class="products">
-    <h1>Products</h1>
+    <h1 class="title">{{ route.query.q ? `Search Results for "${route.query.q}"` : 'All Products '}}</h1>
 
     <p v-if="loading" class="status">Loading...</p>
 
-    <div v-else class="grid">
-      <div v-for="product in products" :key="product.id" class="card">
-        <router-link :to="`/products/${product.slug}`" class="product-link">
-          <img :src="(getImageSrc(product.image) as string)" alt="Product image" />
-          <h2 class="product-title">{{ product.name }}</h2>
-        </router-link>
-        <p class="category">{{ product.category.name }}</p>
-        <p class="price">Rs. {{ product.price }}</p>
-        <AddToCartButton :productId="product.id"/>
+    <div v-else>
+      <p v-if="!products.length" class="status">No products found.</p>
+
+      <div :class="['grid', route.query.q ? 'search-mode' : '']">
+        <div v-for="product in products" :key="product.id" class="card">
+          <router-link :to="`/products/${product.slug}`" class="product-link">
+            <img :src="(getImageSrc(product.image) as string)" alt="Product image" />
+            <h2 class="product-title">{{ product.name }}</h2>
+          </router-link>
+          <p class="category">{{ product.category.name }}</p>
+          <p class="price">Rs. {{ product.price }}</p>
+          <AddToCartButton :productId="product.id"/>
+        </div>
       </div>
     </div>
   </section>
 </template>
 
 <script lang="ts" setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import type { Product } from '../types/Product'
 import { fetchProducts } from '../services/productService'
 import AddToCartButton from './AddToCartButton.vue'
+import { useRoute } from 'vue-router'
+import type { LocationQueryValue } from 'vue-router'
 
 const products = ref<Product[]>([])
 const loading = ref(true)
-
-onMounted(async () => {
-  products.value = await fetchProducts()
-  loading.value = false
-})
+const route = useRoute()
 
 const getImageSrc = (image: string | null): string => {
   return image ?? new URL('@/assets/default-image.png', import.meta.url).href
 }
 
+function getQueryParam(q: LocationQueryValue | LocationQueryValue[] | undefined): string {
+  if (Array.isArray(q)) return q[0] ?? ''
+  if (typeof q === 'string') return q
+  return ''
+}
+
+const loadProducts = async () => {
+  loading.value = true
+  const q = getQueryParam(route.query.q)
+  products.value = await fetchProducts(q)
+  loading.value = false
+}
+
+onMounted(loadProducts)
+
+watch(() => route.query.q, loadProducts)
 </script>
 
 <style scoped>
@@ -72,6 +90,9 @@ const getImageSrc = (image: string | null): string => {
 }
 
 .status {
+  text-align: center;
+  color: #888;
+  margin: 2rem 0;
   font-size: 1rem;
   color: var(--muted-color);
 }
@@ -79,7 +100,10 @@ const getImageSrc = (image: string | null): string => {
 .grid {
   display: grid;
   gap: 1rem;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fill, 220px);
+  justify-content: center;
+  max-width: calc(250px * 5 + 1rem * 4);
+  margin:0 auto
 }
 
 .card {
@@ -119,4 +143,5 @@ const getImageSrc = (image: string | null): string => {
   font-weight: bold;
   color: var(--primary);
 }
+
 </style>
