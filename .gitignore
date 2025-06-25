@@ -10,7 +10,7 @@ venv/
 .venv
 
 #Media Files
-/media
+/media/
 
 #Environment variables
 env/
