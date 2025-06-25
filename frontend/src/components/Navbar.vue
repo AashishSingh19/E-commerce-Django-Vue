@@ -77,8 +77,9 @@ onMounted(async () => {
 })
 
 const handleSearch = () => {
-  if (searchQuery.value.trim()) {
-    console.log('Search for:', searchQuery.value)
+  const query = searchQuery.value.trim()
+  if(query){
+    router.push({path: '/', query: {q: query}})
     searchQuery.value = ''
   }
 }

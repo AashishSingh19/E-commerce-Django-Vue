@@ -1,15 +1,15 @@
 <template>
     <div class="cart-page">
-        <h1>Your Cart</h1>
+        <h2>Your Cart</h2>
 
         <div v-if="loading" class="status-message">
             Loading Cart Items...
         </div>
         <div v-else-if="cartItems.length === 0" class="status-message">
-            Your cart is empty
+            <strong>Your cart is empty</strong>
         </div>
 
-        <div v-else class="cart-items">
+       <div v-else class="cart-items">
             <div v-for="item in cartItems" :key="item.id" class="cart-item">
                 <div class="item-info">
                     <img :src="item.product.image ?? ''" alt="Product" class="item-image" />
@@ -19,12 +19,16 @@
                             Quantity: {{ item.quantity }}
                         </p>
                         <p>Price: {{ item.product.price * item.quantity }}</p>
-                        <button @click="goToCheckout()" class="checkout-button">Checkout</button>
                     </div>
                 </div>
                 <button @click="removeItem(item.id)" class="remove-button">Remove</button>
-            </div>
+            </div> 
         </div>
+        <button 
+          v-if="cartStore.totalCount > 0"
+          @click="goToCheckout()" 
+          class="checkout-button"
+        >Checkout</button>
     </div>
 </template>
 
@@ -131,5 +135,6 @@ h1 {
   padding: 8px 14px;
   border-radius: 4px;
   cursor: pointer;
+  margin-top: 0.5rem;
 }
 </style>
