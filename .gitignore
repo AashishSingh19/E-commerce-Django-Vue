@@ -9,6 +9,9 @@ db.sqlite3
 venv/
 .venv
 
+#Media Files
+/media
+
 #Environment variables
 env/
 .env
@@ -42,5 +45,3 @@ pnpm-debug.log*
 *.sln
 *.sw?
 
-#media folder
-/media/
