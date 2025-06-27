@@ -83,11 +83,21 @@ watch(() => route.query.q, loadProducts)
   display: block;
 }
 
-.product-title{
+.product-title {
   color: #333;
   font-weight: 600;
   font-size: 1.1rem;
+  min-height: 2.6rem; /* Ensures two lines max */
+  line-height: 1.3rem;
+  overflow: hidden;
+  display: -webkit-box;
+  display: box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  box-orient: vertical;
 }
+
 
 .status {
   text-align: center;
@@ -112,6 +122,7 @@ watch(() => route.query.q, loadProducts)
   border-radius: var(--radius);
   padding: 1rem;
   transition: box-shadow 0.2s ease;
+  height: 100%;
 }
 
 .card:hover {
@@ -122,8 +133,6 @@ watch(() => route.query.q, loadProducts)
   width: 100%;
   height: 140px;
   object-fit: contain;
-  border-radius: 0.25rem;
-  margin-bottom: 0.5rem;
 }
 
 .card h2 {
@@ -136,6 +145,7 @@ watch(() => route.query.q, loadProducts)
   font-size: 0.875rem;
   color: var(--muted-color);
   margin-bottom: 0.25rem;
+  min-height: 1.2rem;
 }
 
 .price {
