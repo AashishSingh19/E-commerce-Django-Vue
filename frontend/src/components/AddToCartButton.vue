@@ -53,6 +53,10 @@ async function handleAddToCart() {
 }
 </script>
 
-<style>
-
+<style scoped>
+::v-deep(AddToCartButton) {
+  background-color: red;
+  padding: 10px;
+  border-radius: 8px;
+}
 </style>
