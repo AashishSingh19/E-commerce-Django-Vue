@@ -3,10 +3,10 @@
     <img :src="getImageSrc(product.image)" alt="Product Image" class="product-image" />
     <div class="product-info">
       <h1>{{ product.name }}</h1>
-      <p class="category">Category: {{ product.category.name }}</p>
-      <p class="price">Price: Rs. {{ product.price }}</p>
-      <p class="description">{{ product.description }}</p>
-      <p class="stock">In Stock: {{ product.stock }}</p>
+      <p class="category">Category: <span class="info">{{ product.category.name }}</span></p>
+      <p class="price">Price: Rs. <span class="info">{{ product.price }}</span></p>
+      <p class="description">Description: <span class="info">{{ product.description }}</span></p>
+      <p class="stock">In Stock: <span class="info">{{ product.stock }}</span></p>
       <AddToCartButton :productId="product.id"/>
     </div>
   </section>
@@ -58,6 +58,11 @@ const getImageSrc = (image: string | null): string => {
 .product-info{
     flex: 1;
 }
+
+.info {
+  color: #676262; 
+}
+
 .category{
     font-size: 1rem;
     font-weight:500;
