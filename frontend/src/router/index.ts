@@ -43,6 +43,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Help',
     component: ()=> import('@/views/HelpAndSupportView.vue'),
   },
+  {
+    path: '/display-and-accessibility',
+    name: 'Display',
+    component: ()=> import('@/views/Display&AccessibilityView.vue'),
+  },
     {
     path: '/products/:slug',
     name: 'ProductDetail',
