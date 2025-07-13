@@ -36,7 +36,7 @@
             <ul>
                 <li><a @click="goToUser" href="#">User Settings</a></li>
                 <li><a @click="goToHelp" href="#">Help & Support</a></li>
-                <li><a href="#">Display & Accessibility</a></li>
+                <li><a @click="goToDisplay" href="#">Display & Accessibility</a></li>
                 <li><button @click="handleLogout">Logout</button></li>
               </ul>
           </div>
@@ -86,6 +86,10 @@ const handleSearch = () => {
 
 const goToUser = async() =>{
   router.push('/user-profile')
+}
+
+const goToDisplay = async() =>{
+  router.push('/display-and-accessibility')
 }
 
 const toggleDropdown = () => {
