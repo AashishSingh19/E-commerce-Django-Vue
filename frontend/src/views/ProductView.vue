@@ -3,20 +3,40 @@
     <div class="product-image-container">
       <img :src="getImageSrc(product.image)" alt="Product Image" class="product-image" />
     </div>
+
     <div class="product-info">
       <h1 class="product-title">{{ product.name }}</h1>
+
+    <div class="product-rating">
+      <template v-if="product.review_count && product.review_count > 0">
+        <span class="stars">⭐️ {{ product.rating?.toFixed(1) ?? 'N/A' }}/5</span>
+        <small class="reviews">({{ product.review_count }} reviews)</small>
+      </template>
+      <template v-else>
+        <small class="no-reviews">No reviews yet</small>
+      </template>
+    </div>
+
       <ul class="product-meta">
         <li><strong>Category:</strong> <span>{{ product.category.name }}</span></li>
-        <li><strong>Price:</strong> <span>Rs. {{ Number(product.price).toFixed(2) }}</span></li>
-        <li><strong>In Stock:</strong> <span>{{ product.stock }}</span></li>
+        <li><strong>Price:</strong> <span class="price">Rs. {{ Number(product.price).toFixed(2) }}</span></li>
+        <li><strong>In Stock:</strong> <span :class="{ 'out-of-stock': product.stock === 0 }">
+          {{ product.stock > 0 ? product.stock : 'Out of stock' }}
+        </span></li>
       </ul>
+
       <p class="product-description">{{ product.description }}</p>
-      <AddToCartButton :productId="product.id" />
+
+      <AddToCartButton :productId="product.id"/>
     </div>
   </section>
 
-  <p v-else-if="loading" class="status">Loading...</p>
-  <p v-else class="status error">Product not found.</p>
+  <div v-else-if="loading" class="skeleton-loader">
+    <div class="image-placeholder shimmer"></div>
+    <div class="text-placeholder shimmer" v-for="n in 4" :key="n"></div>
+  </div>
+
+  <p v-else class="status error">Sorry, we couldn’t find the product. Try browsing other items.</p>
 </template>
 
 <script lang="ts" setup>
@@ -71,11 +91,12 @@ const getImageSrc = (image: string | null): string => {
 }
 
 .product-image {
-  max-width: 100%;
+  width: 100%;
+  max-width: 500px;
   height: auto;
   object-fit: contain;
-  border-radius: 12px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  border-radius: 16px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
 }
 
 .product-info {
@@ -86,10 +107,21 @@ const getImageSrc = (image: string | null): string => {
 }
 
 .product-title {
-  font-size: 2rem;
+  font-size: 2.2rem;
   font-weight: 700;
   margin: 0;
   color: #222;
+}
+
+.product-rating {
+  font-size: 1rem;
+  color: #888;
+  margin-bottom: 0.5rem;
+}
+
+.product-rating .stars {
+  color: #f5b301;
+  font-weight: bold;
 }
 
 .product-meta {
@@ -108,11 +140,69 @@ const getImageSrc = (image: string | null): string => {
   color: #555;
 }
 
+.product-meta .price {
+  color: #27ae60;
+  font-weight: bold;
+}
+
+.out-of-stock {
+  color: #e74c3c;
+  font-weight: bold;
+}
+
 .product-description {
   font-size: 1rem;
   color: #666;
   line-height: 1.6;
   margin-top: 1rem;
+}
+
+.cta-button {
+  margin-top: 1.5rem;
+  align-self: flex-start;
+}
+
+/* Skeleton loader styles */
+.skeleton-loader {
+  max-width: 600px;
+  margin: 2rem auto;
+  padding: 1rem;
+}
+
+.image-placeholder {
+  width: 100%;
+  height: 300px;
+  border-radius: 12px;
+  background: #ddd;
+  margin-bottom: 1rem;
+}
+
+.text-placeholder {
+  height: 20px;
+  margin: 0.5rem 0;
+  border-radius: 6px;
+  background: #ddd;
+}
+
+.shimmer {
+  position: relative;
+  overflow: hidden;
+}
+
+.shimmer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -150px;
+  height: 100%;
+  width: 150px;
+  background: linear-gradient(to right, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%);
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
 }
 
 .status {

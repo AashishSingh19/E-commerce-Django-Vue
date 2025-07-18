@@ -13,4 +13,6 @@ export interface Product{
     image: string | null
     stock: number
     category: Category
+    rating?: number | null
+    review_count?: number
 }
